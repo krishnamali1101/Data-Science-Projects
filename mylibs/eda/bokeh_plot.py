@@ -23,6 +23,8 @@ def plot_hist(feature_values, feature_name='', fill_color='', line_color=''):
            y_axis_label = 'count')
 
     if not line_color:
+        # import random
+        # line_color = random.choice(color_list)
         line_color = color_list[randint(0,len(color_list))-1]
     if not fill_color:
         fill_color = color_list[randint(0,len(color_list))-1]
