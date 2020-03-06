@@ -57,7 +57,7 @@ def donut_chart(col_values, col_name='', normalize=True, figsize=(17,8)):
     sizes = new_value_counts_dict.values()
     #explode = (0 for i in range(len(labels)))
 
-    plt.figure(figsize=figsize
+    plt.figure(figsize=figsize)
     plt.title(col_name)
     plt.pie(sizes, labels=labels, autopct='%1.1f%%', shadow=True)
 
