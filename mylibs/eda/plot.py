@@ -1,7 +1,6 @@
 def display_plot(df, col_to_exclude='', object_mode = True):
-    if not EDA:
-        return
-
+    import matplotlib.pyplot as plt
+    import seaborn as sns
     n = 0
     this = []
     if object_mode:
@@ -37,12 +36,9 @@ def display_plot(df, col_to_exclude='', object_mode = True):
     plt.show();
     return None
 
-def donut_chart(col_values, col_name='', normalize=True):
-    if not EDA:
-        return
-
+def donut_chart(col_values, col_name='', normalize=True, figsize=(17,8)):
     import matplotlib.pyplot as plt
-    %matplotlib inline
+    get_ipython().run_line_magic('matplotlib', 'inline')
     import seaborn as sns
 
     # The slices will be ordered and plotted counter-clockwise.
@@ -61,7 +57,7 @@ def donut_chart(col_values, col_name='', normalize=True):
     sizes = new_value_counts_dict.values()
     #explode = (0 for i in range(len(labels)))
 
-    plt.figure(figsize=(17,8))
+    plt.figure(figsize=figsize
     plt.title(col_name)
     plt.pie(sizes, labels=labels, autopct='%1.1f%%', shadow=True)
 

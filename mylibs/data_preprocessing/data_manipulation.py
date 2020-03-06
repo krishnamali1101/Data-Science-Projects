@@ -1,4 +1,5 @@
 def convert_date_to_datetime(date):
+    import pandas as pd
     if not pd.isna(date):
         d, m, y = str(date).split('-')
         dt = "-".join([d, m, '%d%s' % (19 if int(y) >= 25 else 20, y)])

@@ -1,5 +1,6 @@
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
 from sklearn.metrics import f1_score, recall_score
+import matplotlib.pyplot as plt
 
 def PrintStats(cmat, y_test, pred):
     tpos = cmat[0][0]
