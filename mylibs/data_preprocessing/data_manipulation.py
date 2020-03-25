@@ -41,12 +41,3 @@ def filter_df(df, skip_cols):
     for col in cat_columns:
         df[col] = df[col].apply(filter_column)
     return df
-
-
-# extract code between square brackets
-
-def extract_code(s, start='[', end=']'):
-    if isinstance(s, str) and (start in s) and (end in s):
-        return s[s.find(start)+1:s.find(end)]
-    else:
-        return s
