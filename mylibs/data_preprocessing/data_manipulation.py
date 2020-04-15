@@ -42,10 +42,16 @@ def filter_df(df, skip_cols):
         df[col] = df[col].apply(filter_column)
     return df
 
-# extract code between square brackets
+def find_nth(string, substring, n):
+    if (n == 1):
+        return string.find(substring)
+    else:
+        return string.find(substring, find_nth(string, substring, n - 1) + 1)
 
-def extract_code(s, start='[', end=']'):
-    if isinstance(s, str) and (start in s) and (end in s):
-        return s[s.find(start)+1:s.find(end)]
+# extract code between square brackets
+# loc is loc of first code
+def extract_code(s, start_with='[', ends_with=']', loc=1):    
+    if isinstance(s, str):
+        return s[find_nth(claim_id,start_with,loc)+1:find_nth(claim_id,ends_with,loc)]
     else:
         return s
