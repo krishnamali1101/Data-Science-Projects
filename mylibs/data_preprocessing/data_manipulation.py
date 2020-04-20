@@ -50,8 +50,26 @@ def find_nth(string, substring, n):
 
 # extract code between square brackets
 # loc is loc of first code
-def extract_code(s, start_with='[', ends_with=']', loc=1):    
-    if isinstance(s, str):
-        return s[find_nth(claim_id,start_with,loc)+1:find_nth(claim_id,ends_with,loc)]
-    else:
-        return s
+def extract_code(s, start_with='[', ends_with=']', loc=1):
+    try:
+        if isinstance(s, str):
+            return s[find_nth(s,start_with,loc)+1:find_nth(s,ends_with,loc)]
+        else:
+            return s
+    except:
+        print("Problem in ",s)
+        return None
+    
+    
+    
+# save file (csv)
+def save_df(df, filename, path):
+    from datetime import datetime
+    import os
+    datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    file_name = path+ os.path.sep+"{0}_{1}.csv".format(filename, datetime_str)
+    df.to_csv(file_name,index=False)
+    print('-'*80)
+    print("File saved...", file_name)
+    print('-'*80)
