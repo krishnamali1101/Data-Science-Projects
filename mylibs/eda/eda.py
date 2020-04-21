@@ -27,12 +27,16 @@ def analyse_unique_values_in_column(df, max_unique=30, plot=False):
         #print()
 
 
-def missing_values_analysis(df,figsize=(15,10)):
-    all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
-    missing_values = all_missing_values[all_missing_values.values>0].sort_values(ascending=True)
-
+def missing_values_analysis(df, other_missing_values=[], figsize=(15,10)):
     import numpy as np
     import matplotlib.pyplot as plt
+
+    for mv in other_missing_values:
+        for col in df.columns:
+            df[col] = np.where(df[col]==mv, np.nan, df[col])
+    
+    all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
+    missing_values = all_missing_values[all_missing_values.values>0].sort_values(ascending=True)
 
     objects = missing_values.index
     y_pos = np.arange(len(objects))
