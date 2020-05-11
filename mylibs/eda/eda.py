@@ -281,3 +281,33 @@ def plot_corr_mat(df):
                 annot=True);
 
     print(df.corr())
+
+def value_counts(df,col, round_val=2):
+    return pd.DataFrame(list(zip(df[col].value_counts().index, 
+                                    df[col].value_counts().values, 
+                                    df[col].value_counts(normalize=True).mul(100).round(round_val).values)), 
+                                columns=[col,"Count", "%Count"])
+
+def df_to_formatted_str(df, join_with=' -- '):
+    l1 = [str(list(df.columns))]
+    for i in range(len(df)):
+        l2 = []
+        for col in df.columns:
+            l2.append(df.loc[i,col])
+        l1.append(str(tuple(l2)))
+    return join_with.join(l1)
+
+# Function which returns subset or r length from n 
+import itertools 
+  
+def combinations_single_list(l):
+    list_all_combinations = []
+    for r in range(1, len(l)+1):
+        list_all_combinations.extend(list(itertools.combinations(l, r)))
+        
+    return list_all_combinations
+
+
+def combinations_multi_list(list_of_lists):
+    return list(itertools.product(*list_of_lists)) 
+    
