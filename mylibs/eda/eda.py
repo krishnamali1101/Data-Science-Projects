@@ -288,8 +288,11 @@ def value_counts(df,col, round_val=2):
                                     df[col].value_counts(normalize=True).mul(100).round(round_val).values)), 
                                 columns=[col,"Count", "%Count"])
 
-def df_to_formatted_str(df, join_with=' -- '):
-    l1 = [str(list(df.columns))]
+def df_to_formatted_str(df, headers=True, join_with=' -- '):
+    l1 = []
+    if headers:
+        l1 = [str(list(df.columns))]
+    
     for i in range(len(df)):
         l2 = []
         for col in df.columns:
