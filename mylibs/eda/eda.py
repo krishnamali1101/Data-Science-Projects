@@ -6,7 +6,10 @@ def analyse_unique_values_in_column(df, max_unique=30, plot=False):
     for col in df:
         try:
             if len(df[col].unique()) < max_unique:
-                print(df[col].name, ' : ', df[col].unique())
+                #print(df[col].name, ' : ', df[col].unique())
+                print(df[col].name)
+                print('-'*20)
+                print(value_counts(df,col).to_string())
                 print('-'*80)
                 print()
                 #print('-'*100)
