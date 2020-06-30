@@ -34,6 +34,17 @@ def feature_scaling(df, col_name_list, replace=False,drop=True):
                 df = df.drop([col],axis=1)
     return df
 
+# Target var should be numeric and feature_to_encode should be categorical 
+def LabelEncoder_groupby_label_sortedby_meanof_targetvar(df, feature_to_encode, target_var):
+    from pandas.api.types import is_string_dtype, is_numeric_dtype
+    if not (is_numeric_dtype(df[target_var]) & is_string_dtype(df[feature_to_encode])):
+        print("ErrorMsg: Target var should be numeric and feature_to_encode should be categorical")
+        return {}
+    
+    temp = df.groupby(feature_to_encode)[target_var].mean().sort_values()
+
+    res = list(zip(*enumerate(temp.index)))
+    return dict(zip(res[1],res[0]))
 
 # VIF_test for feature selection/remove
 def VIF_test(df):
