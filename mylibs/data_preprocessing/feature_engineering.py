@@ -35,13 +35,22 @@ def feature_scaling(df, col_name_list, replace=False,drop=True):
     return df
 
 # Target var should be numeric and feature_to_encode should be categorical 
-def LabelEncoder_groupby_label_sortedby_meanof_targetvar(df, feature_to_encode, target_var):
+def LabelEncoder_groupby_label_sortedby_meanof_targetvar(df, feature_to_encode, target_var, sort_by='mean', ascending=True):
+    '''
+    sort_by: mean, median, mode
+    '''
     from pandas.api.types import is_string_dtype, is_numeric_dtype
     if not (is_numeric_dtype(df[target_var]) & is_string_dtype(df[feature_to_encode])):
         print("ErrorMsg: Target var should be numeric and feature_to_encode should be categorical")
         return {}
-    
-    temp = df.groupby(feature_to_encode)[target_var].mean().sort_values()
+
+    temp = None
+    if sort_by='median':
+        temp = df.groupby(feature_to_encode)[target_var].median().sort_values(ascending=ascending)
+    elif sort_by='mode':
+        temp = df.groupby(feature_to_encode)[target_var].mode().sort_values(ascending=ascending)
+    else:
+        temp = df.groupby(feature_to_encode)[target_var].mean().sort_values(ascending=ascending)
 
     res = list(zip(*enumerate(temp.index)))
     return dict(zip(res[1],res[0]))
