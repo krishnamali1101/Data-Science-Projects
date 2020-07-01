@@ -45,9 +45,9 @@ def LabelEncoder_groupby_label_sortedby_meanof_targetvar(df, feature_to_encode, 
         return {}
 
     temp = None
-    if sort_by='median':
+    if sort_by=='median':
         temp = df.groupby(feature_to_encode)[target_var].median().sort_values(ascending=ascending)
-    elif sort_by='mode':
+    elif sort_by=='mode':
         temp = df.groupby(feature_to_encode)[target_var].mode().sort_values(ascending=ascending)
     else:
         temp = df.groupby(feature_to_encode)[target_var].mean().sort_values(ascending=ascending)
