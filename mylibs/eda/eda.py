@@ -28,7 +28,24 @@ def analyse_unique_values_in_column(df, max_unique=30, plot=False):
             print("Problem in Feature", col, e)
             print('-'*80)
         #print()
+        
+        
+# Print Unique count in all 
+def print_unique_values(df, max_unique=100):
+    for col in df:
+        try:
+            unique_values = df[col].nunique()            
+            print(F'{df[col].name} : {unique_values}')
+            print('-'*20)
 
+            if  unique_values < max_unique:
+                print(df[col].unique())
+                #print(value_counts(df,col).to_string())
+                print('-'*80)
+                print()
+        except Exception as e:
+            print("Problem in Feature", col, e)
+            print('-'*80)
 
 def missing_values_analysis(df, other_missing_values=[], figsize=(15,10)):
     import numpy as np
