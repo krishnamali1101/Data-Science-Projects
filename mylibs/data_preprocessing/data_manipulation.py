@@ -73,3 +73,22 @@ def save_df(df, filename, path):
     print('-'*80)
     print("File saved...", file_name)
     print('-'*80)
+    
+def read_excel(filename):
+    xls = pd.ExcelFile(filename)
+    print("Available Sheets: ",xls.sheet_names)
+
+    df_dict = {}
+    for sheet in xls.sheet_names:
+        df_dict[sheet] = pd.read_excel(filename, sheet_name=sheet, index_col=0)
+    return df_dict
+
+
+def write_excel(df_dict,filename, engine='xlsxwriter'):
+    # Create a Pandas Excel writer using XlsxWriter as the engine.
+    writer = pd.ExcelWriter(filename, engine=engine)
+
+    for col in df_dict.keys():
+        df_dict[col].to_excel(writer, sheet_name=col)
+
+    writer.save()
