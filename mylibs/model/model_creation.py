@@ -1,3 +1,10 @@
+import lightgbm as lgb
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+from numpy.random import seed
+import statsmodels.api as sm
+import pandas as pd
 
 # Function that runs the requested algorithm and returns the accuracy metrics
 def fit_ml_algo(algo, X_train, y_train, X_test, cv, probs_threshold=.4):
@@ -56,7 +63,6 @@ def fit_ml_algo_lgbm(algo, X_train, y_train, X_test, cv, probs_threshold=.4):
 
 
     # Model building and training
-    import lightgbm as lgb
     train_data = lgb.Dataset(X_train,#label=y_train.INCURRED_TOTAL,
                              label=y_train,
                             # categorical_feature = cat_lgb
@@ -106,12 +112,7 @@ def fit_ml_algo_lgbm(algo, X_train, y_train, X_test, cv, probs_threshold=.4):
 
 # Importing the Keras libraries and packages
 def fit_ANN(X_train, y_train, input_dim):
-    import keras
-    from keras.models import Sequential
-    from keras.layers import Dense
-
     # Seed Random Number to get constant result
-    from numpy.random import seed
     seed(1)
 
     # Initialising the ANN
@@ -137,8 +138,6 @@ def stepwise_selection(X, y,
                        threshold_in=0.01,
                        threshold_out = 0.05,
                        verbose=True):
-    import statsmodels.api as sm
-    import pandas as pd
     """ Perform a forward-backward feature selection
     based on p-value from statsmodels.api.OLS
     Arguments:
