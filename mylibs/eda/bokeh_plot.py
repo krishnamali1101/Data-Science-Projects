@@ -1,12 +1,10 @@
-
+import numpy as np
+from bokeh.io import show, output_notebook, show
+from bokeh.plotting import figure
+from bokeh.colors import named
+from random import randint
 
 def plot_hist(feature_values, feature_name='', fill_color='', line_color=''):
-    import numpy as np
-    from bokeh.io import show, output_notebook, show
-    from bokeh.plotting import figure
-    from bokeh.colors import named
-    from random import randint
-
     #print(random.randint(0,len(dir(named)[10:])))
     color_list = dir(named)[10:]
 
