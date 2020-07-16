@@ -1,7 +1,15 @@
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import numpy as np
+import pylab
+from scipy import stats
+import pandas_profiling as pp
+from random import randint
+import itertools
+
 def analyse_unique_values_in_column(df, max_unique=30, plot=False):
-    import matplotlib.pyplot as plt
     get_ipython().run_line_magic('matplotlib', 'inline')
-    import seaborn as sns
 
     for col in df:
         try:
@@ -28,13 +36,13 @@ def analyse_unique_values_in_column(df, max_unique=30, plot=False):
             print("Problem in Feature", col, e)
             print('-'*80)
         #print()
-        
-        
-# Print Unique count in all 
+
+
+# Print Unique count in all
 def print_unique_values(df, max_unique=100):
     for col in df:
         try:
-            unique_values = df[col].nunique()            
+            unique_values = df[col].nunique()
             print(F'{df[col].name} : {unique_values}')
             print('-'*20)
 
@@ -48,13 +56,10 @@ def print_unique_values(df, max_unique=100):
             print('-'*80)
 
 def missing_values_analysis(df, other_missing_values=[], figsize=(15,10)):
-    import numpy as np
-    import matplotlib.pyplot as plt
-
     for mv in other_missing_values:
         for col in df.columns:
             df[col] = np.where(df[col]==mv, np.nan, df[col])
-    
+
     all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
     missing_values = all_missing_values[all_missing_values.values>0].sort_values(ascending=True)
 
@@ -94,8 +99,6 @@ def segregate_columns(df):
 
 
 def outliers_analysis_using_boxplot(df, g_value = 1.5, plot=False):
-    import seaborn as sns
-    import matplotlib.pyplot as plt
     get_ipython().run_line_magic('matplotlib', 'inline')
 
     for col in df.columns:
@@ -122,9 +125,6 @@ def outliers_analysis_using_boxplot(df, g_value = 1.5, plot=False):
         print()
 
 def outliers_analysis_specific_feature_using_boxplot(col_values, g_value = 1.5, plot=False):
-
-    import seaborn as sns
-    import matplotlib.pyplot as plt
     get_ipython().run_line_magic('matplotlib', 'inline')
 
     Q1 = col_values.quantile(0.25)
@@ -175,11 +175,6 @@ def outliers_analysis_using_standard_deviation(df, factor = 3, plot=False):
         print('-'*80)
 
         if plot:
-            import matplotlib.pyplot as plt
-            import pylab
-            import numpy as np
-            from scipy import stats
-
             pylab.rcParams['figure.figsize'] = (10.0, 8.0)
             ax = plt.subplot(111)
             x = df[(df[col] > lower_lim) & (df[col] < upper_lim)][col] # data other thn outliers
@@ -198,12 +193,6 @@ def outliers_analysis_using_standard_deviation(df, factor = 3, plot=False):
 #df = df[~outliers]
 
 def profile_report(df, out_file='profile_report.html', dump_profile_report=True):
-    try:
-        import pandas_profiling as pp
-    except:
-        #pip install pandas-profiling
-        import pandas_profiling as pp
-
     pfr = pp.ProfileReport(df)
 
     if dump_profile_report:
@@ -213,7 +202,6 @@ def profile_report(df, out_file='profile_report.html', dump_profile_report=True)
 
 
 def crosstab(col1,col2):
-    import pandas as pd
     df = pd.crosstab(col1, col2, margins=True)
 
     df.plot(kind='bar',figsize=(15,10))
@@ -221,7 +209,6 @@ def crosstab(col1,col2):
 
 # looking at any random row
 def print_random_row(df):
-    from random import randint
     set_display_options()
     randi = randint(0,df.shape[0]-1)
     print("Row No: ", randi)
@@ -238,7 +225,6 @@ def formated_print(values, num_of_cols=4, col_width=30):
 
 def set_display_options(max_rows=500, max_columns=500, width=1000, max_colwidth=-1):
     '''set_display_options for jupyter notebook'''
-    import pandas as pd
     pd.options.display.max_rows
     pd.set_option('display.max_rows', max_rows)
     pd.set_option('display.max_columns', max_columns)
@@ -247,7 +233,6 @@ def set_display_options(max_rows=500, max_columns=500, width=1000, max_colwidth=
 
 
 def find_columns_to_del(df, critical_missing_value_percentage=0.9, id_col_unique_values_percentage=0.9):
-    import pandas as pd
     # Features with single constant values to remove.
     nunique = df.apply(pd.Series.nunique)
     single_constant_values_cols = list(nunique[nunique<=1].index)
@@ -290,9 +275,6 @@ def print_full_rows(df, how_many=1):
     print(df1[df1.isnull().mean(axis=1)==1])
 
 def plot_corr_mat(df):
-    import seaborn as sns
-    import matplotlib.pyplot as plt
-
     plt.figure(figsize=(20,15))
 
     sns.heatmap(df.corr(),
@@ -303,16 +285,16 @@ def plot_corr_mat(df):
     print(df.corr())
 
 def value_counts(df,col, round_val=2):
-    return pd.DataFrame(list(zip(df[col].value_counts().index, 
-                                    df[col].value_counts().values, 
-                                    df[col].value_counts(normalize=True).mul(100).round(round_val).values)), 
+    return pd.DataFrame(list(zip(df[col].value_counts().index,
+                                    df[col].value_counts().values,
+                                    df[col].value_counts(normalize=True).mul(100).round(round_val).values)),
                                 columns=[col,"Count", "%Count"])
 
 def df_to_formatted_str(df, headers=True, join_with=' -- '):
     l1 = []
     if headers:
         l1 = [str(list(df.columns))]
-    
+
     for i in range(len(df)):
         l2 = []
         for col in df.columns:
@@ -320,17 +302,14 @@ def df_to_formatted_str(df, headers=True, join_with=' -- '):
         l1.append(str(tuple(l2)))
     return join_with.join(l1)
 
-# Function which returns subset or r length from n 
-import itertools 
-  
+# Function which returns subset or r length from n
 def combinations_single_list(l):
     list_all_combinations = []
     for r in range(1, len(l)+1):
         list_all_combinations.extend(list(itertools.combinations(l, r)))
-        
+
     return list_all_combinations
 
 
 def combinations_multi_list(list_of_lists):
-    return list(itertools.product(*list_of_lists)) 
-    
+    return list(itertools.product(*list_of_lists))
