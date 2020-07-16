@@ -1,6 +1,7 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 def display_plot(df, col_to_exclude='', object_mode = True):
-    import matplotlib.pyplot as plt
-    import seaborn as sns
     n = 0
     this = []
     if object_mode:
@@ -37,10 +38,7 @@ def display_plot(df, col_to_exclude='', object_mode = True):
     return None
 
 def donut_chart(col_values, col_name='', normalize=True, figsize=(17,8)):
-    import matplotlib.pyplot as plt
     get_ipython().run_line_magic('matplotlib', 'inline')
-    import seaborn as sns
-
     # The slices will be ordered and plotted counter-clockwise.
     value_counts_dict = col_values.value_counts(normalize)
 
