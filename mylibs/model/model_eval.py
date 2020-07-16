@@ -1,6 +1,9 @@
 from sklearn.metrics import confusion_matrix, cohen_kappa_score
 from sklearn.metrics import f1_score, recall_score
 import matplotlib.pyplot as plt
+import itertools
+from sklearn import metrics
+import math
 
 def PrintStats(cmat, y_test, pred):
     tpos = cmat[0][0]
@@ -48,9 +51,6 @@ def full_classification_report(y_train, y_test, train_pred, test_pred,
     print ("classification_report on test data:\n",metrics.classification_report(y_test, test_pred))
 
 def reg_metrics(y_test, test_pred):
-    from sklearn import metrics
-    import math
-
     print("mean_absolute_error(MAE): ", metrics.mean_absolute_error(y_test, test_pred))
     print("root_mean_squared_error(RMSE): ", math.sqrt(metrics.mean_squared_error(y_test, test_pred)))
     print("r2_score: ", metrics.r2_score(y_test, test_pred))
@@ -74,8 +74,6 @@ def plot_roc_curve(y_test, preds):
 
 
 #Evaluation of Model - Confusion Matrix Plot
-import itertools
-
 def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues):
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
