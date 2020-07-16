@@ -1,5 +1,10 @@
+import pandas as pd
+import string
+from collections.abc import Iterable
+from datetime import datetime
+import os
+
 def convert_date_to_datetime(date):
-    import pandas as pd
     if not pd.isna(date):
         d, m, y = str(date).split('-')
         dt = "-".join([d, m, '%d%s' % (19 if int(y) >= 25 else 20, y)])
@@ -9,7 +14,6 @@ def convert_date_to_datetime(date):
 
 
 def convert_date_to_str(date):
-    import pandas as pd
     if not pd.isna(date):
         try:
             d, m, y = str(date).split('-')
@@ -22,10 +26,7 @@ def convert_date_to_str(date):
 
 # remove_punctuation from col
 def filter_df(df, skip_cols):
-    import string
     def filter_column(col_data):
-        from collections.abc import Iterable
-
         if isinstance(col_data, Iterable):
             col_data = col_data.lower().strip().replace(' ', '_')
             col_data = ''.join([i for i in col_data if i not in frozenset(string.punctuation.replace('_',''))])
@@ -59,13 +60,9 @@ def extract_code(s, start_with='[', ends_with=']', loc=1):
     except:
         print("Problem in ",s)
         return None
-    
-    
-    
+
 # save file (csv)
 def save_df(df, filename, path):
-    from datetime import datetime
-    import os
     datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     file_name = path+ os.path.sep+"{0}_{1}.csv".format(filename, datetime_str)
@@ -73,7 +70,7 @@ def save_df(df, filename, path):
     print('-'*80)
     print("File saved...", file_name)
     print('-'*80)
-    
+
 def read_excel(filename):
     xls = pd.ExcelFile(filename)
     print("Available Sheets: ",xls.sheet_names)
