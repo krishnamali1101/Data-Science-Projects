@@ -1,15 +1,21 @@
+from collections import Counter
+from imblearn.under_sampling import RandomUnderSampler
+from imblearn.combine import SMOTETomek
+from sklearn.preprocessing import StandardScaler
+from pandas.api.types import is_string_dtype, is_numeric_dtype
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+import pandas as pd
+
 def apply_sampling(X_train, y_train, target_column_name, sampling_type='SMOTETomek'):
     # apply sampling on training Data set
-    from collections import Counter
 
     print('Original dataset shape %s' % Counter(y_train))
 
     if sampling_type=='RandomUnderSampler':
-        from imblearn.under_sampling import RandomUnderSampler
         sampler = RandomUnderSampler(sampling_strategy=1, random_state=23)
         X_train, y_train = sampler.fit_resample(X_train, y_train)
     elif sampling_type=='SMOTETomek':
-        from imblearn.combine import SMOTETomek
+
         sampler = SMOTETomek(random_state=42)
         X_train, y_train = sampler.fit_resample(X_train, y_train)
     else:
@@ -23,7 +29,7 @@ def apply_sampling(X_train, y_train, target_column_name, sampling_type='SMOTETom
 
 
 def feature_scaling(df, col_name_list, replace=False,drop=True):
-    from sklearn.preprocessing import StandardScaler
+
 
     for col in col_name_list:
         if replace:
@@ -34,12 +40,12 @@ def feature_scaling(df, col_name_list, replace=False,drop=True):
                 df = df.drop([col],axis=1)
     return df
 
-# Target var should be numeric and feature_to_encode should be categorical 
+# Target var should be numeric and feature_to_encode should be categorical
 def LabelEncoder_groupby_label_sortedby_meanof_targetvar(df, feature_to_encode, target_var, sort_by='mean', ascending=True):
     '''
     sort_by: mean, median, mode
     '''
-    from pandas.api.types import is_string_dtype, is_numeric_dtype
+
     if not (is_numeric_dtype(df[target_var]) & is_string_dtype(df[feature_to_encode])):
         print("ErrorMsg: Target var should be numeric and feature_to_encode should be categorical")
         return {}
@@ -57,9 +63,6 @@ def LabelEncoder_groupby_label_sortedby_meanof_targetvar(df, feature_to_encode, 
 
 # VIF_test for feature selection/remove
 def VIF_test(df):
-    from statsmodels.stats.outliers_influence import variance_inflation_factor
-    import pandas as pd
-
     cols_list = []
     vif_list = []
     for i in range(df.shape[1]):
