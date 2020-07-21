@@ -71,7 +71,6 @@ def donut_chart(col_values, col_name='', normalize=True, figsize=(17,8)):
     print(col_name,"\n",col_values.value_counts())
     print('-'*80)
 
-    
 
 def distplot(X, bins=10, color='blue'):
     # X: var to plot
