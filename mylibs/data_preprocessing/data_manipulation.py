@@ -131,6 +131,7 @@ def classify(values_to_classify, classification_bins=[], classification_bins_fil
             else:
                 classification_bins = list(values.quantile(quartiles))
         
+    classification_bins = classification_bins.copy() # hard copy
     # insert min & max in limit
     classification_bins.insert(0,-math.inf)
     classification_bins.append(math.inf)
