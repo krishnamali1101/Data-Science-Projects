@@ -182,3 +182,18 @@ def stepwise_selection(X, y,
         if not changed:
             break
     return included
+
+
+def train_lgbm(X_train,y_train,X_test,y_test, num_round=1000, params = {}):
+    ## Model building and training
+    train_data = lgb.Dataset(X_train,label=y_train) 
+    lgb_eval = lgb.Dataset(X_test,label=y_test) ### only when label encoding.(or target + label)
+
+    # set default params if not passed
+    if not params:
+        params = {'num_leaves':65, 'objective':'regression','max_depth':4,'learning_rate':0.01,'n_jobs':4}
+    
+    # Train
+    model =lgb.train(params,train_data,num_round, valid_sets=lgb_eval, early_stopping_rounds=20)
+    
+    return model
