@@ -4,6 +4,7 @@ from collections.abc import Iterable
 from datetime import datetime
 import os
 import math
+import numpy as np
 
 def convert_date_to_datetime(date):
     if not pd.isna(date):
