@@ -89,3 +89,57 @@ def write_excel(df_dict,filename, engine='xlsxwriter'):
         df_dict[col].to_excel(writer, sheet_name=col)
 
     writer.save()
+    
+def classify(index, test_pred, classification_bins=[], classification_bins_file_path=None, 
+                         default_bin_method='median', quartiles=[0.25,0.5,0.75]):
+    '''
+        # test_pred: 1D-list or np array
+        # index: index of predictions
+        # classification_bins_file_path: if bins are stored in text file, separated by new line
+        # classification_bins: 
+        # default_bin_method='median'/ mean/ quantile([0.25,0.5,0.75])
+
+        Function callimng
+        l = [1,2,3,4,5,6,7,8,9,20]
+
+        filename = '/Users/gopalmali/Desktop/test.txt'
+
+        #classify_predictions(l, l)
+        # classify_predictions(l, l, classification_bins=[4,7])
+        #classify_predictions(l, l, classification_bins_file_path= filename)
+        # classify_predictions(l, l, default_bin_method='median')
+        # classify_predictions(l, l, default_bin_method='mean')
+        # classify_predictions(l, l, default_bin_method='quartile')
+        # classify_predictions(l, l, default_bin_method='quartile', quartiles=[0.25, 0.75])
+    '''
+    
+    if not classification_bins:
+        try:
+            ## Read classes
+            with open(classification_bins_file_path) as fp:
+                classification_bins = fp.read().splitlines()
+
+            classification_bins = list(map(int, classification_bins))
+        except:
+            # use default classification_bins
+            test_pred_series = pd.Series(test_pred)
+            if default_bin_method=='median':
+                classification_bins = [test_pred_series.median()]
+            elif default_bin_method=='mean':
+                classification_bins = [test_pred_series.mean()]
+            else:
+                classification_bins = list(test_pred_series.quantile(quartiles))
+        
+    # insert min & max in limit
+    classification_bins.insert(0,-math.inf)
+    classification_bins.append(math.inf)
+    
+    print("-- Classification Bins:", classification_bins)
+    test_pred = np.array(test_pred)
+    conditions = [((classification_bins[i]<=test_pred) & (test_pred<classification_bins[i+1])) for i in range(len(classification_bins)-1)]
+    choices = list(range(len(conditions),0, -1))    
+    test_pred_class = np.select(conditions, choices, default=max(choices))
+    
+    df_predict = pd.DataFrame({'CLAIM_ID':index, 'Pred':test_pred, 'Pred_class':test_pred_class})
+    df_predict.set_index('CLAIM_ID',inplace=True)
+    return df_predict, classification_bins
