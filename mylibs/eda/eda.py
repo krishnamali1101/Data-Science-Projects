@@ -55,13 +55,38 @@ def print_unique_values(df, max_unique=100):
             print("Problem in Feature", col, e)
             print('-'*80)
 
-def missing_values_analysis(df, other_missing_values=[], figsize=(15,10)):
+# def missing_values_analysis(df, other_missing_values=[], figsize=(15,10)):
+#     for mv in other_missing_values:
+#         for col in df.columns:
+#             df[col] = np.where(df[col]==mv, np.nan, df[col])
+
+#     all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
+#     missing_values = all_missing_values[all_missing_values.values>0].sort_values(ascending=True)
+
+#     objects = missing_values.index
+#     y_pos = np.arange(len(objects))
+#     count = missing_values.values
+
+#     plt.figure(figsize=figsize)
+#     plt.barh(y_pos, count, align='center', alpha=0.9)
+#     plt.yticks(y_pos, objects)
+#     plt.ylabel('col names')
+#     plt.title('Missing values')
+
+#     plt.show()
+#     set_display_options()
+#     return all_missing_values
+
+def missing_values_analysis(df, other_missing_values=[], figsize=(15,20)):
+    print("Shape: ", df.shape)
     for mv in other_missing_values:
         for col in df.columns:
             df[col] = np.where(df[col]==mv, np.nan, df[col])
 
-    all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
-    missing_values = all_missing_values[all_missing_values.values>0].sort_values(ascending=True)
+    all_missing_values = df.isna().sum().sort_values(ascending=False)
+    #all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
+    all_missing_values_per = round(all_missing_values*100/df.shape[0],2)
+    missing_values = all_missing_values_per[all_missing_values_per.values>0].sort_values(ascending=True)
 
     objects = missing_values.index
     y_pos = np.arange(len(objects))
@@ -75,7 +100,15 @@ def missing_values_analysis(df, other_missing_values=[], figsize=(15,10)):
 
     plt.show()
     set_display_options()
-    return all_missing_values
+    
+    # create df
+    all_missing_values_df = pd.DataFrame()
+    all_missing_values_df['Feature'] = all_missing_values.index
+    all_missing_values_df['Missing_values'] = all_missing_values.values
+    all_missing_values_df['% Missing_values'] = all_missing_values_per.values
+    all_missing_values_df['available_values'] = df.shape[0] - all_missing_values.values
+    all_missing_values_df['Unique_values'] = df[all_missing_values.index].nunique().values
+    return all_missing_values_df.set_index('Feature')
 
 
 def segregate_columns(df):
