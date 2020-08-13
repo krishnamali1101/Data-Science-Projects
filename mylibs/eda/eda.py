@@ -55,38 +55,13 @@ def print_unique_values(df, max_unique=100):
             print("Problem in Feature", col, e)
             print('-'*80)
 
-# def missing_values_analysis(df, other_missing_values=[], figsize=(15,10)):
-#     for mv in other_missing_values:
-#         for col in df.columns:
-#             df[col] = np.where(df[col]==mv, np.nan, df[col])
-
-#     all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
-#     missing_values = all_missing_values[all_missing_values.values>0].sort_values(ascending=True)
-
-#     objects = missing_values.index
-#     y_pos = np.arange(len(objects))
-#     count = missing_values.values
-
-#     plt.figure(figsize=figsize)
-#     plt.barh(y_pos, count, align='center', alpha=0.9)
-#     plt.yticks(y_pos, objects)
-#     plt.ylabel('col names')
-#     plt.title('Missing values')
-
-#     plt.show()
-#     set_display_options()
-#     return all_missing_values
-
-def missing_values_analysis(df, other_missing_values=[], figsize=(15,20)):
-    print("Shape: ", df.shape)
+def missing_values_analysis(df, other_missing_values=[], figsize=(15,10)):
     for mv in other_missing_values:
         for col in df.columns:
             df[col] = np.where(df[col]==mv, np.nan, df[col])
 
-    all_missing_values = df.isna().sum().sort_values(ascending=False)
-    #all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
-    all_missing_values_per = round(all_missing_values*100/df.shape[0],2)
-    missing_values = all_missing_values_per[all_missing_values_per.values>0].sort_values(ascending=True)
+    all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
+    missing_values = all_missing_values[all_missing_values.values>0].sort_values(ascending=True)
 
     objects = missing_values.index
     y_pos = np.arange(len(objects))
@@ -100,15 +75,7 @@ def missing_values_analysis(df, other_missing_values=[], figsize=(15,20)):
 
     plt.show()
     set_display_options()
-    
-    # create df
-    all_missing_values_df = pd.DataFrame()
-    all_missing_values_df['Feature'] = all_missing_values.index
-    all_missing_values_df['Missing_values'] = all_missing_values.values
-    all_missing_values_df['% Missing_values'] = all_missing_values_per.values
-    all_missing_values_df['available_values'] = df.shape[0] - all_missing_values.values
-    all_missing_values_df['Unique_values'] = df[all_missing_values.index].nunique().values
-    return all_missing_values_df.set_index('Feature')
+    return all_missing_values
 
 
 def segregate_columns(df):
@@ -346,3 +313,77 @@ def combinations_single_list(l):
 
 def combinations_multi_list(list_of_lists):
     return list(itertools.product(*list_of_lists))
+
+
+
+def data_distribution(df, other_missing_values=[], max_nunique=10, plot=False, figsize=(15,20), 
+                      is_Unique_values_distribution = True, is_print_random_row=True,
+                       is_find_columns_to_del = True, is_segregate_columns=True,
+                      critical_missing_value_percentage=0.9, id_col_unique_values_percentage=0.9):
+    '''Features: Shape, missing values, unique values, data distribution, segregate_columns, 
+    find_columns_to_del, print_random_row'''
+
+    print("Shape: ", df.shape)
+    print('='*80)
+    print()
+    
+    for mv in other_missing_values:
+        for col in df.columns:
+            df[col] = np.where(df[col]==mv, np.nan, df[col])
+
+    all_missing_values = df.isna().sum().sort_values(ascending=False)
+    #all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
+    all_missing_values_per = round(all_missing_values*100/df.shape[0],2)
+    missing_values = all_missing_values_per[all_missing_values_per.values>0].sort_values(ascending=True)
+
+    if plot:
+        objects = missing_values.index
+        y_pos = np.arange(len(objects))
+        count = missing_values.values
+
+        plt.figure(figsize=figsize)
+        plt.barh(y_pos, count, align='center', alpha=0.9)
+        plt.yticks(y_pos, objects)
+        plt.ylabel('col names')
+        plt.title('Missing values')
+
+        plt.show()
+        set_display_options()
+        print('='*80)
+        print()
+    # create df
+    all_missing_values_df = pd.DataFrame()
+    all_missing_values_df['Feature'] = all_missing_values.index
+    all_missing_values_df['Missing_values'] = all_missing_values.values
+    all_missing_values_df['% Missing_values'] = all_missing_values_per.values
+    all_missing_values_df['available_values'] = df.shape[0] - all_missing_values.values
+    all_missing_values_df['Unique_values_count'] = df[all_missing_values.index].nunique().values
+    
+    if is_Unique_values_distribution:
+        all_missing_values_df['Unique_values_distribution'] = [df_to_formatted_str(value_counts(df,col), headers=False, join_with=' -- ') 
+         if df[col].nunique()<=max_nunique else '' for col in all_missing_values_df.Feature]
+    
+    if is_segregate_columns:
+        print("Diffrent columns available: ")
+        segregated_columns_dict = segregate_columns(df)
+        for k,v in segregated_columns_dict.items():
+            print(k," : ",v)
+            print('-'*50)
+        print('='*80)
+        print()
+    
+    if is_find_columns_to_del:
+        print("Suggested columns to delete: ")
+        cols_to_del_dict = find_columns_to_del(df, critical_missing_value_percentage, id_col_unique_values_percentage)
+        for k,v in cols_to_del_dict.items():
+            print(k," : ",v)
+            print('-'*50)
+        print('='*80)
+        print()
+        
+    if is_print_random_row:
+        print("Random Row:\n",print_random_row(df))
+        print('='*80)
+        print()
+    
+    return all_missing_values_df.set_index('Feature')
