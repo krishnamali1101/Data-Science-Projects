@@ -333,7 +333,7 @@ def data_distribution(df, other_missing_values=[], max_nunique=10, plot=False, f
 
     all_missing_values = df.isna().sum().sort_values(ascending=False)
     #all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
-    all_missing_values_per = round(all_missing_values*100/df.shape[0],2)
+    all_missing_values_per = round(all_missing_values*100/df.shape[0],4)
     missing_values = all_missing_values_per[all_missing_values_per.values>0].sort_values(ascending=True)
 
     if plot:
