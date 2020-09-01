@@ -112,3 +112,9 @@ def plot_roc_curves(y_test, prob, model):
     plt.plot(fpr, tpr, 'b', label = model + ' AUC = %0.2f' % roc_auc, color=np.random.rand(3,))
     plt.legend(loc = 'lower right')
     return roc_auc*100
+
+def classification_eval(Actual_class, Pred_class, classes):
+    cnf_matrix = confusion_matrix(Actual_class, Pred_class, classes)
+
+    print("Accuracy: {}%\n".format(round(accuracy_score(Actual_class, Pred_class)*100, 2)))
+    plot_confusion_matrix(cnf_matrix, classes=classes)
