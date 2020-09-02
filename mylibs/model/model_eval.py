@@ -114,6 +114,9 @@ def plot_roc_curves(y_test, prob, model):
     return roc_auc*100
 
 def classification_eval(Actual_class, Pred_class, classes):
+    if len(classes)==2:
+        plot_roc_curve(Actual_class, Pred_class)
+    
     cnf_matrix = confusion_matrix(Actual_class, Pred_class, classes)
 
     print("Accuracy: {}%\n".format(round(accuracy_score(Actual_class, Pred_class)*100, 2)))
