@@ -13,10 +13,13 @@ def analyse_unique_values_in_column(df, max_unique=30, plot=False):
 
     for col in df:
         try:
-            if len(df[col].unique()) < max_unique:
+            print(f'{df[col].name} : {df[col].nunique()}')
+            print('-'*20)
+            
+            if df[col].nunique() < max_unique:
                 #print(df[col].name, ' : ', df[col].unique())
-                print(df[col].name)
-                print('-'*20)
+                #print(df[col].name)
+                #print('-'*20)
                 print(value_counts(df,col).to_string())
                 print('-'*80)
                 print()
@@ -30,12 +33,10 @@ def analyse_unique_values_in_column(df, max_unique=30, plot=False):
                         sns.countplot(y = col, data = df, order = df[col].value_counts().index)
 
                     plt.show()
-                    #print('-'*80)
-#                     print('-'*80)
+ 
         except Exception as e:
             print("Problem in Feature", col, e)
             print('-'*80)
-        #print()
 
 
 # Print Unique count in all
@@ -285,9 +286,9 @@ def plot_corr_mat(df):
     print(df.corr())
 
 def value_counts(df,col, round_val=2):
-    return pd.DataFrame(list(zip(df[col].value_counts().index,
-                                    df[col].value_counts().values,
-                                    df[col].value_counts(normalize=True).mul(100).round(round_val).values)),
+    return pd.DataFrame(list(zip(df[col].value_counts(dropna=False).index,
+                                    df[col].value_counts(dropna=False).values,
+                                    df[col].value_counts(normalize=True, dropna=False).mul(100).round(round_val).values)),
                                 columns=[col,"Count", "%Count"])
 
 def df_to_formatted_str(df, headers=True, join_with=' -- '):
