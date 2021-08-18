@@ -56,27 +56,35 @@ def print_unique_values(df, max_unique=100):
             print("Problem in Feature", col, e)
             print('-'*80)
 
-def missing_values_analysis(df, other_missing_values=[], figsize=(15,10)):
+def missing_values_analysis(df, other_missing_values=[], plot=True, figsize=(15,10)):
+    df = df.copy()
     for mv in other_missing_values:
         for col in df.columns:
             df[col] = np.where(df[col]==mv, np.nan, df[col])
 
-    all_missing_values = round(df.isna().sum()*100/df.shape[0],2).sort_values(ascending=False)
-    missing_values = all_missing_values[all_missing_values.values>0].sort_values(ascending=True)
+    all_missing_values = pd.DataFrame()
+    all_missing_values['Missing_Values'] = df.isna().sum()
+    all_missing_values['% Missing_Values'] = round(df.isna().sum()*100/df.shape[0],2)    
+    
+    if plot:
+        missing_values = all_missing_values[all_missing_values['Missing_Values']>0]['% Missing_Values'].sort_values(ascending=True)
 
-    objects = missing_values.index
-    y_pos = np.arange(len(objects))
-    count = missing_values.values
+        objects = missing_values.index
+        y_pos = np.arange(len(objects))
+        count = missing_values.values
 
-    plt.figure(figsize=figsize)
-    plt.barh(y_pos, count, align='center', alpha=0.9)
-    plt.yticks(y_pos, objects)
-    plt.ylabel('col names')
-    plt.title('Missing values')
+        plt.figure(figsize=figsize)
+        plt.barh(y_pos, count, align='center', alpha=0.9)
+        plt.yticks(y_pos, objects)
+        plt.ylabel('col names')
+        plt.title('Missing values')
 
-    plt.show()
-    set_display_options()
-    return all_missing_values
+        plt.show()
+        set_display_options()
+    
+    print("Total Claims: ", df.shape[0])
+    print('-'*40)
+    return all_missing_values.sort_values(by='Missing_Values',ascending=False)
 
 
 def segregate_columns(df):
